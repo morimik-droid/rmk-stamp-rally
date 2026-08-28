@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- キャッシュ対策 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>RMK ミッションスタンプラリー 🌟</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #F8FAF9;
+            touch-action: manipulation;
+        }
+        .bg-stripes {
+            background: repeating-linear-gradient(
+                -45deg,
+                #F3F9F6,
+                #F3F9F6 12px,
+                #FFFFFF 12px,
+                #FFFFFF 24px
+            );
+        }
+        .no-break {
+            white-space: nowrap;
+        }
+        /* ポップなスタンプアニメーション */
+        @keyframes stamp-pop {
+            0% { transform: scale(3) rotate(-15deg); opacity: 0; }
+            70% { transform: scale(0.9) rotate(5deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .animate-stamp {
+            animation: stamp-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="bg-stripes min-h-screen text-gray-800 pb-20 select-none">
+
+    <!-- ヘッダーエリア -->
+    <header class="pt-6 pb-4 px-4 text-center">
+        <div class="inline-block bg-white border border-emerald-100 shadow-sm rounded-full px-4 py-1 mb-2">
+            <span class="text-xs font-bold tracking-wider text-emerald-800 no-break">✨ RMK MISSION STAMP RALLY 2026 ✨</span>
+        </div>
+        <h1 class="text-xl font-black italic tracking-wide text-gray-800 no-break mt-1">
+            透明感を手に入れよう！<br>
+            <span class="text-emerald-600">RMK スタンプラリー 🌟</span>
+        </h1>
+        <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+            ミッションをクリアして10個のスタンプを集めよう！<br>店舗で使える豪華クーポンをGET🎁
+        </p>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="max-w-md mx-auto px-4">
+
+        <!-- スタンプカード -->
+        <section class="bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg border border-emerald-100 mb-6">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-gray-100">
+                <span class="text-sm font-bold text-gray-700">現在のスタンプ 💮</span>
+                <span class="text-xs font-extrabold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full" id="stamp-count-badge">
+                    0 / 10 達成
+                </span>
+            </div>
+
+            <!-- スタンプ台紙（10個のグリッド） -->
+            <div class="grid grid-cols-5 gap-3" id="stamp-grid">
+                <!-- JSで自動生成されます -->
+            </div>
+        </section>
+
+        <!-- クーポン獲得エリア -->
+        <section class="mb-6">
+            <h2 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1">
+                <span>🎁</span> 獲得可能な特典チケット
+            </h2>
+            <div class="space-y-3">
+                <!-- 3個達成クーポン -->
+                <div id="coupon-card-3" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 opacity-60 transition-all">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">スタンプ3個特典</span>
+                            <h3 class="font-bold text-sm text-gray-800 mt-1">サンプルセット引換券 🧴</h3>
+                            <p class="text-xs text-gray-500">カウンターで新作ベースメイク体験</p>
+                        </div>
+                        <button onclick="openCouponModal(3)" id="coupon-btn-3" disabled class="bg-gray-300 text-white font-bold text-xs px-3 py-2 rounded-xl no-break">
+                            未達成
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 6個達成クーポン -->
+                <div id="coupon-card-6" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 opacity-60 transition-all">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold bg-gray-100 text-gray-600 px-2 py-0.5 rounded-md">スタンプ6個特典</span>
+                            <h3 class="font-bold text-sm text-gray-800 mt-1">1,000円 OFFチケット 🎟️</h3>
+                            <p class="text-xs text-gray-500">店舗・EC共通（5,500円以上）</p>
+                        </div>
+                        <button onclick="openCouponModal(6)" id="coupon-btn-6" disabled class="bg-gray-300 text-white font-bold text-xs px-3 py-2 rounded-xl no-break">
+                            未達成
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 10個達成クーポン -->
+                <div id="coupon-card-10" class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 opacity-60 transition-all">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">10個コンプリート特典</span>
+                            <h3 class="font-bold text-sm text-gray-800 mt-1">全品15% OFF ＆ ノベルティ 👑</h3>
+                            <p class="text-xs text-gray-500">オリジナルポーチ絶対プレゼント</p>
+                        </div>
+                        <button onclick="openCouponModal(10)" id="coupon-btn-10" disabled class="bg-gray-300 text-white font-bold text-xs px-3 py-2 rounded-xl no-break">
+                            未達成
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ミッション一覧 -->
+        <section class="mb-8">
+            <h2 class="text-sm font-bold text-gray-700 mb-3 flex items-center gap-1">
+                <span>🎯</span> ミッションに挑戦しよう！
+            </h2>
+            <div class="space-y-3">
+
+                <!-- 🧾 買い物ルート -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-emerald-50">
+                    <div class="text-xs font-bold text-emerald-700 mb-2 flex items-center gap-1">
+                        <span>🧾</span> レシートアップロードでGET 📸
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">1. ベースメイクを購入 🧴</span>
+                            <button onclick="completeMission(1)" id="m-btn-1" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">達成</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">2. カラーメイクを購入 💄</span>
+                            <button onclick="completeMission(2)" id="m-btn-2" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">達成</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">3. 期間中2回目の購入 🛍️</span>
+                            <button onclick="completeMission(3)" id="m-btn-3" class="bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">達成</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🌐 Web訪問ルート -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-emerald-50">
+                    <div class="text-xs font-bold text-teal-700 mb-2 flex items-center gap-1">
+                        <span>🌐</span> 公式サイトチェックでGET 👀
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">4. 公式サイトを見る 🔗</span>
+                            <button onclick="visitWebsite(4)" id="m-btn-4" class="bg-teal-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">見る</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">5. 新作LOOKを見る 🖼️</span>
+                            <button onclick="visitWebsite(5)" id="m-btn-5" class="bg-teal-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">見る</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">6. 店舗検索をする 📍</span>
+                            <button onclick="visitWebsite(6)" id="m-btn-6" class="bg-teal-600 text-white text-xs px-3 py-1.5 rounded-lg font-bold">見る</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🧠 クイズルート -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-emerald-50">
+                    <div class="text-xs font-bold text-amber-700 mb-2 flex items-center gap-1">
+                        <span>🧠</span> クイズ正解でGET 💡
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">7. 名品下地クイズ ❓</span>
+                            <button onclick="completeMission(7)" id="m-btn-7" class="bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold">挑戦</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">8. スキンケアクイズ 🧪</span>
+                            <button onclick="completeMission(8)" id="m-btn-8" class="bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold">挑戦</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">9. ブランドヒストリー 🏛️</span>
+                            <button onclick="completeMission(9)" id="m-btn-9" class="bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold">挑戦</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl">
+                            <span class="text-xs font-medium">10. コンプリートクイズ 🎯</span>
+                            <button onclick="completeMission(10)" id="m-btn-10" class="bg-amber-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold">挑戦</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- クーポン消込用モーダルダイアログ -->
+    <div id="coupon-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm text-center shadow-2xl relative overflow-hidden">
+            <h3 class="text-lg font-extrabold text-gray-800 mb-1" id="modal-title">クーポン利用</h3>
+            <p class="text-xs text-gray-500 mb-4">【店舗スタッフ専用】スタッフに画面をお見せください</p>
+            
+            <div class="bg-emerald-50 rounded-2xl p-4 mb-4 border border-emerald-100">
+                <p class="text-xs font-bold text-emerald-800" id="modal-desc">特典内容が表示されます</p>
+            </div>
+
+            <!-- 消込済み表示エリア -->
+            <div id="used-stamp" class="hidden my-4">
+                <div class="inline-block border-4 border-red-500 text-red-500 font-black text-2xl px-6 py-2 rounded-xl transform -rotate-12 animate-stamp">
+                    USED ✨ 利用済
+                </div>
+            </div>
+
+            <div id="passcode-input-area" class="mb-4">
+                <label class="block text-xs font-bold text-gray-600 mb-1 text-left">店舗スタッフ用パスコード</label>
+                <input type="password" id="passcode" placeholder="4桁コード（例: 7123） border-gray-200" class="w-full text-center border-2 border-gray-200 rounded-xl py-2 font-mono text-lg focus:border-emerald-500 outline-none">
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="closeCouponModal()" class="w-1/2 py-3 bg-gray-100 text-gray-600 rounded-xl text-xs font-bold">閉じる</button>
+                <button onclick="submitPasscode()" id="submit-pass-btn" class="w-1/2 py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-md">消込実行</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const TOTAL_STAMPS = 10;
+        let stamps = JSON.parse(localStorage.getItem('rmk_stamps')) || Array(TOTAL_STAMPS).fill(false);
+        let usedCoupons = JSON.parse(localStorage.getItem('rmk_used_coupons')) || {};
+        let currentActiveCouponId = null;
+
+        // 初期化表示
+        function renderStamps() {
+            const grid = document.getElementById('stamp-grid');
+            grid.innerHTML = '';
+            let count = 0;
+
+            stamps.forEach((status, idx) => {
+                if(status) count++;
+                const el = document.createElement('div');
+                el.className = `aspect-square rounded-2xl flex flex-col items-center justify-center border-2 text-xs font-bold transition-all relative overflow-hidden ${
+                    status ? 'bg-emerald-500 border-emerald-400 text-white shadow-md animate-stamp' : 'bg-gray-50 border-dashed border-gray-300 text-gray-400'
+                }`;
+                el.innerHTML = status 
+                    ? `<span class="text-lg">🌟</span><span class="text-[9px] mt-0.5">RMK</span>`
+                    : `<span class="text-gray-300 text-sm">${idx + 1}</span>`;
+                grid.appendChild(el);
+            });
+
+            document.getElementById('stamp-count-badge').innerText = `${count} / 10 達成`;
+            updateCouponUI(count);
+            updateMissionButtons();
+        }
+
+        // ミッション達成処理
+        function completeMission(id) {
+            if(!stamps[id - 1]) {
+                stamps[id - 1] = true;
+                localStorage.setItem('rmk_stamps', JSON.stringify(stamps));
+                renderStamps();
+            }
+        }
+
+        // Web訪問ミッション
+        function visitWebsite(id) {
+            completeMission(id);
+            window.open('https://www.rmkrmk.com/ja/', '_blank');
+        }
+
+        // ミッションボタン表示制御
+        function updateMissionButtons() {
+            for(let i = 1; i <= 10; i++) {
+                const btn = document.getElementById(`m-btn-${i}`);
+                if(btn && stamps[i - 1]) {
+                    btn.innerText = '済 ✨';
+                    btn.className = 'bg-gray-200 text-gray-500 text-xs px-3 py-1.5 rounded-lg font-bold cursor-default';
+                    btn.onclick = null;
+                }
+            }
+        }
+
+        // クーポンUI制御
+        function updateCouponUI(count) {
+            [3, 6, 10].forEach(threshold => {
+                const card = document.getElementById(`coupon-card-${threshold}`);
+                const btn = document.getElementById(`coupon-btn-${threshold}`);
+                
+                if (count >= threshold) {
+                    card.classList.remove('opacity-60');
+                    if (usedCoupons[threshold]) {
+                        btn.innerText = '使用済み';
+                        btn.className = 'bg-gray-200 text-gray-400 font-bold text-xs px-3 py-2 rounded-xl no-break';
+                        btn.disabled = false;
+                    } else {
+                        btn.innerText = '使う 🎁';
+                        btn.className = 'bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow-md no-break';
+                        btn.disabled = false;
+                    }
+                }
+            });
+        }
+
+        // モーダル制御
+        function openCouponModal(id) {
+            currentActiveCouponId = id;
+            const modal = document.getElementById('coupon-modal');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modal-desc');
+            const usedStamp = document.getElementById('used-stamp');
+            const passArea = document.getElementById('passcode-input-area');
+            const submitBtn = document.getElementById('submit-pass-btn');
+
+            if(id === 3) { title.innerText = "サンプルセット引換券"; desc.innerText = "RMKカウンターで新作サンプルセットをお受け取りいただけます。"; }
+            if(id === 6) { title.innerText = "1,000円 OFFチケット"; desc.innerText = "5,500円（税込）以上のお買い物でご利用いただけます。"; }
+            if(id === 10) { title.innerText = "15% OFF ＆ ノベルティ"; desc.innerText = "全品15% OFF ＋ 限定オリジナルポーチをプレゼント。"; }
+
+            if (usedCoupons[id]) {
+                usedStamp.classList.remove('hidden');
+                passArea.classList.add('hidden');
+                submitBtn.classList.add('hidden');
+            } else {
+                usedStamp.classList.add('hidden');
+                passArea.classList.remove('hidden');
+                submitBtn.classList.remove('hidden');
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCouponModal() {
+            const modal = document.getElementById('coupon-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('passcode').value = '';
+        }
+
+        // 消込送信API連携
+        async function submitPasscode() {
+            const pass = document.getElementById('passcode').value;
+            if(!pass) return alert('パスコードを入力してください');
+
+            try {
+                const res = await fetch('/api/use-coupon', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ passcode: pass, coupon_id: currentActiveCouponId })
+                });
+                const data = await res.json();
+
+                if(data.success) {
+                    usedCoupons[currentActiveCouponId] = true;
+                    localStorage.setItem('rmk_used_coupons', JSON.stringify(usedCoupons));
+                    alert(data.message);
+                    renderStamps();
+                    closeCouponModal();
+                } else {
+                    alert(data.message || '消込に失敗しました');
+                }
+            } catch (e) {
+                // ローカル用フォールバック
+                if(pass === '7123') {
+                    usedCoupons[currentActiveCouponId] = true;
+                    localStorage.setItem('rmk_used_coupons', JSON.stringify(usedCoupons));
+                    alert("✨ 消込が完了しました！");
+                    renderStamps();
+                    closeCouponModal();
+                } else {
+                    alert("パスコードが違います (テスト用: 7123)");
+                }
+            }
+        }
+
+        // 初期読み込み
+        renderStamps();
+    </script>
+</body>
+</html>
